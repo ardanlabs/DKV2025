@@ -26,6 +26,30 @@ AUTH_IMAGE      := $(BASE_IMAGE_NAME)/$(AUTH_APP):$(VERSION)
 # VERSION       := "0.0.1-$(shell git rev-parse --short HEAD)"
 
 # ==============================================================================
+# Install dependencies
+
+dev-gotooling:
+	go install github.com/divan/expvarmon@latest
+	go install github.com/rakyll/hey@latest
+	go install honnef.co/go/tools/cmd/staticcheck@latest
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	go install golang.org/x/tools/cmd/goimports@latest
+
+dev-brew:
+	brew update
+	brew list kind || brew install kind
+	brew list kubectl || brew install kubectl
+	brew list kustomize || brew install kustomize
+	brew list pgcli || brew install pgcli
+	brew list watch || brew install watch
+
+dev-docker:
+	docker pull docker.io/$(GOLANG) & \
+	docker pull docker.io/$(ALPINE) & \
+	docker pull docker.io/$(KIND) & \
+	docker pull docker.io/$(POSTGRES) & \
+
+# ==============================================================================
 # Building containers
 
 build: sales
