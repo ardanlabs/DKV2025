@@ -48,6 +48,7 @@ dev-docker:
 	docker pull docker.io/$(ALPINE) & \
 	docker pull docker.io/$(KIND) & \
 	docker pull docker.io/$(POSTGRES) & \
+	wait;
 
 # ==============================================================================
 # Building containers
