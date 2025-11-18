@@ -2,24 +2,14 @@
 package mux
 
 import (
-	"encoding/json"
-	"net/http"
+	"github.com/ardanlabs/service/app/domain/status"
+	"github.com/ardanlabs/service/foundation/web"
 )
 
-func WebAPI() http.Handler {
-	mux := http.NewServeMux()
+func WebAPI() *web.App {
+	app := web.NewApp()
 
-	h := func(w http.ResponseWriter, r *http.Request) {
-		status := struct {
-			Status string
-		}{
-			Status: "OK",
-		}
+	app.HandleFunc("GET /status", status.Status)
 
-		json.NewEncoder(w).Encode(status)
-	}
-
-	mux.HandleFunc("GET /status", h)
-
-	return mux
+	return app
 }
