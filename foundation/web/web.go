@@ -33,6 +33,7 @@ func (app *App) HandleFunc(pattern string, handler HandlerFunc, mw ...MidFunc) {
 
 	h := func(w http.ResponseWriter, r *http.Request) {
 		ctx := setTraceID(r.Context(), uuid.New())
+		ctx = setWriter(ctx, w)
 
 		resp := handler(ctx, r)
 		if err := Respond(ctx, w, resp); err != nil {
