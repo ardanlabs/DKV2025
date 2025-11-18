@@ -5,6 +5,9 @@ SHELL = $(if $(wildcard $(SHELL_PATH)),/bin/ash,/bin/bash)
 run:
 	CGO_ENABLED=0 go run api/services/sales/main.go | CGO_ENABLED=0 go run api/tooling/logfmt/main.go
 
+run-help:
+	CGO_ENABLED=0 go run api/services/sales/main.go --help
+
 # ==============================================================================
 # Define dependencies
 
@@ -105,3 +108,29 @@ dev-update-apply: build dev-load dev-apply
 
 dev-logs:
 	kubectl logs --namespace=$(NAMESPACE) -l app=$(SALES_APP) --all-containers=true -f --tail=100 --max-log-requests=6 | go run api/tooling/logfmt/main.go -service=$(SALES_APP)
+
+# ==============================================================================
+# Modules support
+
+deps-reset:
+	git checkout -- go.mod
+	go mod tidy
+	go mod vendor
+
+tidy:
+	go mod tidy
+	go mod vendor
+
+deps-list:
+	go list -m -u -mod=readonly all
+
+deps-upgrade:
+	go get -u -v ./...
+	go mod tidy
+	go mod vendor
+
+deps-cleancache:
+	go clean -modcache
+
+list:
+	go list -mod=mod all
