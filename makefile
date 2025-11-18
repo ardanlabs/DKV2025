@@ -8,6 +8,9 @@ run:
 run-help:
 	CGO_ENABLED=0 go run api/services/sales/main.go --help
 
+curl:
+	curl -i -X GET http://localhost:3000/status
+
 # ==============================================================================
 # Define dependencies
 
