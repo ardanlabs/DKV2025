@@ -4,6 +4,8 @@ package web
 import (
 	"context"
 	"net/http"
+
+	"github.com/google/uuid"
 )
 
 type HandlerFunc func(ctx context.Context, w http.ResponseWriter, r *http.Request) error
@@ -26,12 +28,9 @@ func (app *App) HandleFunc(pattern string, handler HandlerFunc, mw ...MidFunc) {
 	handler = wrapMiddleware(mw, handler)
 
 	h := func(w http.ResponseWriter, r *http.Request) {
+		ctx := setTraceID(r.Context(), uuid.New())
 
-		// I CAN DO WHAT I WAN'T HERE
-
-		handler(r.Context(), w, r)
-
-		// I CAN DO WHAT I WAN'T HERE
+		handler(ctx, w, r)
 	}
 
 	app.ServeMux.HandleFunc(pattern, h)
